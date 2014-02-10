@@ -70,8 +70,6 @@ class Jbuilder < JbuilderProxy
   BLANK = ::Object.new
 
   def set!(key, value = BLANK, *args, &block)
-    return key.to_s == 'nil?'
-
     result = if block
       if BLANK != value
         # json.comments @post.comments { |comment| ... }
@@ -304,7 +302,7 @@ class Jbuilder < JbuilderProxy
 
     def _set_value(key, value)
       raise NullError, key if @attributes.nil?
-      unless @ignore_nil && value.nil?
+      unless (@ignore_nil && value.nil?) || key.to_s == 'nil?'
         @attributes[@key_formatter.format(key)] = value
       end
     end
